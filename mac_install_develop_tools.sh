@@ -90,6 +90,99 @@ for entry in "${programs[@]}"; do
     fi
 done
 
+# NVM (Node Version Manager) 설치
+if [ ! -d "$HOME/.nvm" ]; then
+    echo "NVM을(를) 설치하시겠습니까? [y/n]"
+    read user_choice
+    if [ "$user_choice" != "${user_choice#[Yy]}" ]; then
+        echo "NVM 설치 중..."
+        /bin/bash -c "$(curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh)"
+
+        # NVM 환경 변수를 ~/.zshrc에 추가
+        echo 'export NVM_DIR="$HOME/.nvm"' >> ~/.zshrc
+        echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm' >> ~/.zshrc
+        echo '[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion' >> ~/.zshrc
+        source ~/.zshrc
+
+        # 즉시 적용을 위해 환경 변수 설정
+        export NVM_DIR="$HOME/.nvm"
+        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+        [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+        echo "NVM 설치가 완료되었습니다."
+    else
+        echo "NVM 설치를 건너뜁니다."
+    fi
+else
+    echo "NVM이(가) 이미 설치되어 있습니다."
+fi
+
+# pyenv (Python 버전 관리 프로그램) 설치
+if ! command -v pyenv &> /dev/null; then
+    echo "pyenv을(를) 설치하시겠습니까? [y/n]"
+    read user_choice
+    if [ "$user_choice" != "${user_choice#[Yy]}" ]; then
+        echo "pyenv 설치 중..."
+        brew install pyenv
+        echo 'export PATH="$HOME/.pyenv/bin:$PATH"' >> ~/.zshrc
+        echo 'eval "$(pyenv init --path)"' >> ~/.zshrc
+        echo 'eval "$(pyenv virtualenv-init -)"' >> ~/.zshrc
+        source ~/.zshrc
+        echo "pyenv 설치가 완료되었습니다."
+    else
+        echo "pyenv 설치를 건너뜁니다."
+    fi
+else
+    echo "pyenv이(가) 이미 설치되어 있습니다."
+fi
+
+# Flutter 설치
+if ! command -v flutter &> /dev/null; then
+    echo "Flutter를 설치하시겠습니까? [y/n]"
+    read user_choice
+    if [ "$user_choice" != "${user_choice#[Yy]}" ]; then
+        echo "Flutter 설치 중..."
+        # Flutter tap 추가
+        brew tap dart-lang/dart
+        # Flutter 설치
+        brew install flutter
+        dart pub global activate fvm
+        
+        echo "Flutter 설치가 완료되었습니다."
+    else
+        echo "Flutter 설치를 건너뜁니다."
+    fi
+else
+    echo "Flutter가 이미 설치되어 있습니다."
+fi
+
+#!/bin/bash
+
+# Apple Silicon Macs에서만 Rosetta 설치를 시도합니다.
+if [[ $(uname -m) == 'arm64' ]]; then
+    # Rosetta 설치 여부를 확인합니다.
+    if /usr/bin/pgrep oahd >/dev/null 2>&1; then
+        echo "Rosetta가 이미 설치되어 있습니다."
+    else
+        echo "Rosetta를 설치하시겠습니까? [y/n]"
+        read user_choice
+        if [ "$user_choice" != "${user_choice#[Yy]}" ]; then
+            echo "Rosetta 설치 중..."
+            # 소프트웨어 업데이트 도구를 사용하여 Rosetta를 설치합니다.
+            /usr/sbin/softwareupdate --install-rosetta --agree-to-license
+            
+            if [ $? -eq 0 ]; then
+                echo "Rosetta 설치가 완료되었습니다."
+            else
+                echo "Rosetta 설치에 실패하였습니다."
+            fi
+        else
+            echo "Rosetta 설치를 건너뜁니다."
+        fi
+    fi
+else
+    echo "이 Mac은 Apple Silicon 기반 Mac이 아니므로 Rosetta를 설치할 필요가 없습니다."
+fi
+
 # Xcode 설치 여부 확인 및 설치 유도
 if ! mdfind "kMDItemContentType == 'com.apple.application-bundle' && kMDItemFSName == 'Xcode.app'" | grep -q 'Xcode.app'; then
     echo "Xcode 앱을 설치해야 합니다."
