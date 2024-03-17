@@ -79,6 +79,7 @@ declare -a programs=(
     # "KakaoTalk|kakao-talk|true"
     "Secure Pipes|secure-pipes|true"
     "MySQL Workbench|mysqlworkbench|true"
+    "Yarn|yarn|false"
 )
 
 for entry in "${programs[@]}"; do
