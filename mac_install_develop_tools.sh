@@ -80,6 +80,8 @@ declare -a programs=(
     "Secure Pipes|secure-pipes|true"
     "MySQL Workbench|mysqlworkbench|true"
     "Yarn|yarn|false"
+    "GitKraken|gitkraken|true"
+    "Watchman|watchman|false"
 )
 
 for entry in "${programs[@]}"; do
