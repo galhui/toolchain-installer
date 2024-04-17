@@ -195,4 +195,23 @@ else
     echo "Xcode 앱이 이미 설치되어 있습니다."
 fi
 
+
+# Zulu OpenJDK 17 설치 여부 확인 및 설치
+if ! /usr/libexec/java_home -V 2>&1 | grep -q 'Zulu 17'; then
+    echo "Zulu OpenJDK 17을 설치하시겠습니까? [y/n]"
+    read -r user_choice
+    if [[ "$user_choice" == [Yy] ]]; then
+        echo "Zulu OpenJDK 17을 설치합니다..."
+        brew tap homebrew/cask-versions
+        brew install --cask zulu17
+        echo 'export JAVA_HOME=$(/usr/libexec/java_home -v17)' >> ~/.zshrc
+        source ~/.zshrc
+        echo "Zulu OpenJDK 17 설치가 완료되었습니다."
+    else
+        echo "Zulu OpenJDK 17 설치를 건너뜁니다."
+    fi
+else
+    echo "Zulu OpenJDK 17이(가) 이미 설치되어 있습니다."
+fi
+
 echo "설치가 완료되었습니다!"
