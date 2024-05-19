@@ -82,6 +82,8 @@ declare -a programs=(
     "Yarn|yarn|false"
     "GitKraken|gitkraken|true"
     "Watchman|watchman|false"
+    "Dbeaver Community|dbeaver-community|true"
+    "Eclipse IDE|eclipse-java|true"
 )
 
 for entry in "${programs[@]}"; do
